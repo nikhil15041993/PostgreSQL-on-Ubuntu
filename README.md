@@ -138,3 +138,8 @@ Now simply open the port “5432” in the firewall
 ```
 sudo ufw allow 5432 
 ```
+
+
+```
+eg:  psql -h 107.170.158.89 -U postgres
+```
