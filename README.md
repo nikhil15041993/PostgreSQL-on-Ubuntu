@@ -83,3 +83,58 @@ SWITCH TO DATABASE
 ```
 postgres=# \c guru99
 ```
+
+## Configure PostgreSQL to allow remote connection
+
+By default PostgreSQL is configured to be bound to "localhost".
+
+```
+$ netstat -nlt
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN
+tcp        0      0 127.0.0.1:11211         0.0.0.0:*               LISTEN
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN
+tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN
+tcp        0      0 127.0.0.1:3737          0.0.0.0:*               LISTEN
+tcp6       0      0 :::22                   :::*                    LISTEN
+```
+As we can see above port 5432 is bound to 127.0.0.1. It means any attempt to connect to the postgresql server from outside the machine will be refused. 
+
+### Configuring postgresql.conf:
+
+Now we need to open the file and make some changes in order to allow remote connection. To open the file you’ve to use the keyword “nano” or you can run the command in the terminal that is provided below:
+```
+sudo nano /etc/postgresql/13/main/postgresql.conf 
+```
+
+This command will open this file and in it, you need to search “listen_addresses” and add the following line.
+```
+#listen_addresses = 'localhost'
+listen_addresses = '*'
+```
+
+### Configuring pg_hba.conf:
+
+In order to allow the users that we want to be connected to the database then we need to make changes in the “pg_hba.conf” file. This file will be available under the same directory as above.
+
+Now open the file using the command provided below:
+```
+sudo nano /etc/postgresql/13/main/pg_hba.conf 
+```
+In the file you’ve to add the following lines in file:
+
+```
+# TYPE  DATABASE	USER	ADDRESS   	METHOD
+host    all     	all     0.0.0.0/0      md5
+host    all             all     :/0      md5
+```
+
+Now, restart your database by executing the below given command:
+```
+sudo systemctl restart postgresql 
+```
+Now simply open the port “5432” in the firewall
+```
+sudo ufw allow 5432 
+```
