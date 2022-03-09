@@ -84,7 +84,7 @@ SWITCH TO DATABASE
 postgres=# \c guru99
 ```
 
-## Configure PostgreSQL to allow remote connection
+## 2. Configure PostgreSQL to allow remote connection
 
 By default PostgreSQL is configured to be bound to "localhost".
 
